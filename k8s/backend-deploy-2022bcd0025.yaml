@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deploy-2022bcd0025
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-api
+  template:
+    metadata:
+      labels:
+        app: book-api
+    spec:
+      containers:
+      - name: book-api
+        image: 2022bcd0025-ksuryapoojith
+        ports:
+          - containerPort: 8000
+        env:
+          - name: MONGO_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: db-config-2022bcd0025
+                key: MONGO_HOST
+          - name: MONGO_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: db-config-2022bcd0025
+                key: MONGO_PORT
+          - name: MONGO_DB
+            valueFrom:
+              configMapKeyRef:
+                name: db-config-2022bcd0025
+                key: MONGO_DB
+          - name: MONGO_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-secret-2022bcd0025
+                key: MONGO_USER
+          - name: MONGO_PASS
+            valueFrom:
+              secretKeyRef:
+                name: db-secret-2022bcd0025
+                key: MONGO_PASS
