@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deploy-2022bcd0025
+  labels:
+    app: book-review-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-review-frontend
+  template:
+    metadata:
+      labels:
+        app: book-review-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: 2022bcd0025-k-surya-poojith-frontend:latest
+        ports:
+        - containerPort: 80
