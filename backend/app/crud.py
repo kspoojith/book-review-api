@@ -1,17 +1,19 @@
 from app.database import book_collection
+from app.models import Book
+from bson import ObjectId
 
-async def add_book(book: dict):
-    await book_collection.insert_one(book)
-    return book
+async def create_book(book: Book):
+    result = await book_collection.insert_one(book.dict())
+    return {"id": str(result.inserted_id)}
 
 async def get_books():
-    return [doc async for doc in book_collection.find()]
+    books = await book_collection.find().to_list(1000)
+    return [{"id": str(book["_id"]), **book} for book in books]
 
-async def get_book(title: str):
-    return await book_collection.find_one({"title": title})
+async def update_book(book_id: str, book: Book):
+    await book_collection.update_one({"_id": ObjectId(book_id)}, {"$set": book.dict()})
+    return {"message": "Book updated"}
 
-async def update_book(title: str, data: dict):
-    await book_collection.update_one({"title": title}, {"$set": data})
-
-async def delete_book(title: str):
-    await book_collection.delete_one({"title": title})
+async def delete_book(book_id: str):
+    await book_collection.delete_one({"_id": ObjectId(book_id)})
+    return {"message": "Book deleted"}
